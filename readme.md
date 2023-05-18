@@ -112,6 +112,8 @@ with different modifiers that might not be global or follow a different patterm
 
 @jjcm mentions this as well. Modes are based on how the sets want to be consumed by a user, and are not a property of the set themselves, hence why it also makes sense to use standalone files outside of the token spec to define these and apply them independently.
 
+
+
 ```json5
 {
       /*
@@ -186,6 +188,9 @@ with different modifiers that might not be global or follow a different patterm
 
 
 > Note in the above example json specification since we do not allow arbitrary values, we have left out using the `$` prefix on properties as is used in the token spec.
+
+Please see the [json schema](./schema.json) for this for a more rigid definition
+
 
 For visual thinkers the following is in effect 
 
@@ -262,7 +267,7 @@ As mentioned before, a single dimension is not sufficient. Even if we were to ad
 
 4. By removing fallbacks from the proposal we don't have to worry about edge cases like @jjcm mentioned with the following.
 
-```json
+```json5
 {
   "$name": "intent-action-base-background",
   "$value": [
@@ -334,7 +339,7 @@ We want to resolve the provided resolver:
 <details>
   <summary>Resolver</summary>
 
-```json
+```json5
 {
   "sets": [
     {
@@ -366,7 +371,7 @@ We want to resolve the provided resolver:
 
 with the input 
 
-```json
+```json5
 {
     "theme":"light"
 }
@@ -377,7 +382,7 @@ We first validate that there is a modifier called `theme` that has an acceptable
 Let's assume the following tokens structures for the example 
 
 `foundation.json`
-```json
+```json5
 {
     "gray": {
         "$value": "coolgray",
@@ -391,7 +396,7 @@ Let's assume the following tokens structures for the example
 ```
 
 `semantic.json`
-```json
+```json5
 {
     "primary":{
         "$value": "{theme.accent}"
@@ -400,7 +405,7 @@ Let's assume the following tokens structures for the example
 ```
 
 `button.json`
-```json
+```json5
 {
     "padding": {
         "$value": "8px",
@@ -421,7 +426,7 @@ We first squash all the above tokens into a single set that will be resolved wit
 
 This results in :
 
-```json
+```json5
 {
     "gray": {
         "$value": "coolgray",
@@ -440,7 +445,7 @@ This results in :
 Now the modifiers are :
 
 `light.json`
-```json
+```json5
 {
     "accent": {
         "$value": "lightblue", // for our light theme we want a lighter shade of blue
@@ -449,7 +454,7 @@ Now the modifiers are :
 }
 ```
 `dark.json`
-```json
+```json5
 {
     "accent": {
         "$value": "darkblue", // for our dark theme we want a darker shade of blue
@@ -476,7 +481,7 @@ Assuming `light` was picked as the theme, we would first alias the light set usi
 
 Now resolution would occur. We iterate through the tokens within our input set till we find any that require reference resolution and resolve them first using any values found in the input set, falling back to the modifier set as necessary. In this case `primary` contains a reference to `theme.accent`. The key `theme.accent` does not exist within the input set so we look at the modifier set, and find it. We then perform a replacement within the input set resulting in :
 
-```json
+```json5
 {
     "primary": {
         "$value": "lightblue",
@@ -510,7 +515,7 @@ This would likely be an architectural descision depending on whether the brands 
 
 Consider the following set called `size.json`.
 
-```json
+```json5
 {
   "sm": {
     "$value": "1px",
@@ -529,7 +534,7 @@ Let us assume that we want this file to be namespaced so that we can reference t
 
 Rather we could dynamically namespace this when its loaded into the system through an alias like `foo` to result in 
 
-```json
+```json5
 {
     "foo":{
         "sm": {
@@ -578,7 +583,7 @@ These are the `src/tokens/base/color/light/light.json5` set and the  `src/tokens
 <details>
   <summary>Resolver</summary>
 
-```json
+```json5
 {
   "sets":[{
     //The current solution expects to get actual values from the light and dark base sets as the output. As this is dynamic depending on the dimension. We include an empty set here which will be overriden by the modifier
