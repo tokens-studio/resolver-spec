@@ -1,0 +1,62 @@
+import type { StarlightUserConfig } from '@astrojs/starlight/types';
+
+export default {
+  expressiveCode: {
+    styleOverrides: {
+      textMarkers: {
+        defaultLuminance: ['15%', '85%'],
+      },
+    },
+  },
+  title: 'Resolver Spec',
+  description: 'DTCG draft for token sets & themes resolution.',
+  // logo: { src: './src/assets/logo.png', alt: '' },
+  editLink: {
+    baseUrl: 'https://github.com/tokens-studio/resolver-spec/edit/master/docs/src/content/docs/',
+  },
+  // favicon: '/favicon.png',
+  social: {
+    github: 'https://github.com/tokens-studio/resolver-spec',
+    slack:
+      'https://join.slack.com/t/tokens-studio/shared_invite/zt-1p8ea3m6t-C163oJcN9g3~YZTKRgo2hg',
+  },
+  tableOfContents: {
+    maxHeadingLevel: 4,
+  },
+  sidebar: [],
+  head: [
+    {
+      tag: 'meta',
+      attrs: {
+        name: 'keywords',
+        content: 'design, tokens, DTCG, Design Token Community Group, themes, theming, resolver',
+      },
+    },
+    {
+      tag: 'meta',
+      attrs: {
+        name: 'theme-color',
+        // TODO: change to new TS brand color
+        content: '#11aea7',
+      },
+    },
+    // {
+    //   tag: 'meta',
+    //   attrs: {
+    //     name: 'og:image',
+    //     content: '/meta-img.png',
+    //   },
+    // },
+    // {
+    //   tag: 'meta',
+    //   attrs: {
+    //     name: 'og:image:alt',
+    //     content: 'Image of Tokens Studio Resolver spec',
+    //   },
+    // },
+  ],
+  // customCss: ['./src/styles.css'],
+  // components: {
+  //   Head: './src/components/Head.astro',
+  // },
+} as StarlightUserConfig;

@@ -1,98 +1,75 @@
 {
-    "$id": "https://schemas.tokens.studio/prototype/resolver.json",
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "description": "Resolver Specification",
-    "definitions": {
-        "tokenSet": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "values": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            },
-            "required": [
-                "name",
-                "values"
-            ]
-        },
-        "modifier": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "default": {
-                    "description": "Default value for the modifier",
-                    "type": "string"
-                },
-                "hidden": {
-                    "type": "boolean"
-                },
-                "alias": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string",
-                    "enum": [
-                        "enumerated",
-                        "include"
-                    ]
-                },
-                "values": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "name": {
-                                "type": "string"
-                            },
-                            "values": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                    }
-                }
-            },
-            "required": [
-                "name",
-                "type",
-                "values",
-                "default"
-            ]
-        }
-    },
-    "type": "object",
-    "properties": {
+  "$id": "https://schemas.tokens.studio/prototype/resolver.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Resolver Specification",
+  "$defs": {
+    "tokenSet": {
+      "type": "object",
+      "properties": {
         "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
             "type": "string"
-        },
-        "description": {
-            "type": "string"
-        },
-        "sets": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/tokenSet"
-            }
-        },
-        "modifiers": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/modifier"
-            }
+          }
         }
+      },
+      "required": ["values"]
     },
-    "required": [
-        "sets",
-        "modifiers"
-    ]
+    "modifier": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["name", "values"]
+          }
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": ["name", "values"]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "sets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tokenSet"
+      }
+    },
+    "modifiers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/modifier"
+      }
+    }
+  },
+  "required": ["sets", "modifiers"]
 }

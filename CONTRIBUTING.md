@@ -2,15 +2,15 @@
 
 ### Feedback
 
->First off, thank you for considering contributing to the design tokens resolver proposal. Your feedback helps to shape the tooling we provide. 
+> First off, thank you for considering contributing to the design tokens resolver proposal. Your feedback helps to shape the tooling we provide.
 
 ### Purpose
 
-These guidelines exist to streamline your experience providing feedback and contributing to the specification. 
+These guidelines exist to streamline your experience providing feedback and contributing to the specification.
 
 ### What contributions are not being requested
 
-The resolver spec does act as a bridge for variations of tokens usage in design tools and their final usage in apps. There are already tools like [Stitches](https://stitches.dev/) and [Style Dictionary](https://github.com/amzn/style-dictionary) which are focused on the consumption of resolved tokens. We do not want this proposal to step too far into their territory 
+The resolver spec does act as a bridge for variations of tokens usage in design tools and their final usage in apps. There are already tools like [Stitches](https://stitches.dev/) and [Style Dictionary](https://github.com/amzn/style-dictionary) which are focused on the consumption of resolved tokens. We do not want this proposal to step too far into their territory
 
 ## Providing Examples for large changes
 
@@ -21,7 +21,7 @@ To provide examples for large changes:
 1. Include comprehensive examples that illustrate the intended modifications. These examples should showcase the proposed design tokens in action and highlight their benefits. Attempt to break your solution or find edge cases to ensure robustness.
 2. Collaborate with other contributors and the community to ensure that these changes would be useful to address their use cases
 
-##  Providing Feedback for Use Cases
+## Providing Feedback for Use Cases
 
 We highly value feedback from users and their use cases. Sharing your experiences, challenges, and suggestions helps us improve the resolver proposal and ensure its effectiveness across various scenarios.
 
@@ -34,6 +34,7 @@ To provide feedback for use cases:
 5. Consider offering specific examples that illustrate your use case to further enhance the understanding of your feedback.
 
 ## Code Review and Collaboration
+
 Once you've submitted your proposed changes or feedback, the project maintainers and other contributors will review your contributions. They may offer suggestions, ask questions, or request modifications. Collaborative discussions and code reviews are essential for maintaining the quality and coherence of the proposal.
 
 To collaborate effectively:
@@ -41,7 +42,7 @@ To collaborate effectively:
 - Respond to feedback promptly and constructively.
 - Engage in discussions, offering further clarifications or justifications where necessary.
 - Be respectful and considerate towards other contributors.
-= Be open to incorporating constructive feedback and iterating on your contributions.
+  = Be open to incorporating constructive feedback and iterating on your contributions.
 
 ## Submitting Your Contribution
 
@@ -51,8 +52,7 @@ To submit your contribution:
 
 - Ensure your branch is up to date with the latest changes from the main repository.
 - Rebase your branch if necessary to incorporate the latest updates.
-- Squash your commits 
-
+- Squash your commits
 
 # Community
 
