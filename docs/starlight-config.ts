@@ -17,8 +17,7 @@ export default {
   description: 'DTCG draft for token sets & themes resolution.',
   // logo: { src: './public/logo.png', alt: '' },
   editLink: {
-    // TODO: change this to https://github.com/tokens-studio/resolver-spec/edit/main/docs as soon as docs branch is merged to main
-    baseUrl: 'https://github.com/tokens-studio/resolver-spec/edit/docs/docs',
+    baseUrl: 'https://github.com/tokens-studio/resolver-spec/edit/main/docs',
   },
   // favicon: '/favicon.png',
   social: {
