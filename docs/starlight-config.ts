@@ -1,7 +1,12 @@
 import type { StarlightUserConfig } from '@astrojs/starlight/types';
+import { pluginLanguageClass } from './expressive-code-plugin-language-class';
 
 export default {
   expressiveCode: {
+    plugins: [
+      // Call the plugin initialization function inside the `plugins` array
+      pluginLanguageClass(),
+    ],
     styleOverrides: {
       textMarkers: {
         defaultLuminance: ['15%', '85%'],
@@ -10,9 +15,10 @@ export default {
   },
   title: 'Resolver Spec',
   description: 'DTCG draft for token sets & themes resolution.',
-  // logo: { src: './src/assets/logo.png', alt: '' },
+  // logo: { src: './public/logo.png', alt: '' },
   editLink: {
-    baseUrl: 'https://github.com/tokens-studio/resolver-spec/edit/master/docs/src/content/docs/',
+    // TODO: change this to https://github.com/tokens-studio/resolver-spec/edit/main/docs as soon as docs branch is merged to main
+    baseUrl: 'https://github.com/tokens-studio/resolver-spec/edit/docs/docs',
   },
   // favicon: '/favicon.png',
   social: {
@@ -23,7 +29,6 @@ export default {
   tableOfContents: {
     maxHeadingLevel: 4,
   },
-  sidebar: [],
   head: [
     {
       tag: 'meta',
@@ -55,8 +60,8 @@ export default {
     //   },
     // },
   ],
-  // customCss: ['./src/styles.css'],
-  // components: {
-  //   Head: './src/components/Head.astro',
-  // },
+  customCss: ['./src/style.css'],
+  components: {
+    Head: './src/components/Head.astro',
+  },
 } as StarlightUserConfig;
