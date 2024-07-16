@@ -4,11 +4,11 @@
 
 Take a look at our [POC site](https://0lrskm.csb.app/) which shows the tokens in action and provides a few examples that can be played with.
 
-### Tools 
+### Tools
 
-Tokens Studio provides a wide variety of tools for designers and token users 
+Tokens Studio provides a wide variety of tools for designers and token users
 
-- [Figma Plugin](https://www.figma.com/community/plugin/843461159747178978/Tokens-Studio-for-Figma-(Figma-Tokens)). Github repo available [here](https://github.com/tokens-studio/figma-plugin)
+- [Figma Plugin](<https://www.figma.com/community/plugin/843461159747178978/Tokens-Studio-for-Figma-(Figma-Tokens)>). Github repo available [here](https://github.com/tokens-studio/figma-plugin)
 - [Style Dictionary configurator](https://configurator.tokens.studio/) . Github repo available [here](https://github.com/tokens-studio/style-dictionary-configurator)
 - [Style dictionary transforms](https://github.com/tokens-studio/sd-transforms)
 - [Typescript support for tokens](https://github.com/tokens-studio/types)
@@ -17,19 +17,19 @@ Tokens Studio provides a wide variety of tools for designers and token users
 
 There is a Slack channel where the community can exchange ideas, best practices or simply ask a question relating to design tokens. [Want to join](https://tokens.studio/slack).
 
------
+---
 
 ## Context and Problem Statement
 
->This proposal was spurred on by a post in the design tokens community regarding [modes and theming support](https://github.com/design-tokens/community-group/issues/210) in tandem with feedback from users of the [Tokens Studio Figma plugin](https://github.com/tokens-studio/figma-plugin). Many of the mentions of specific users are with respects to this initial post.
+> This proposal was spurred on by a post in the design tokens community regarding [modes and theming support](https://github.com/design-tokens/community-group/issues/210) in tandem with feedback from users of the [Tokens Studio Figma plugin](https://github.com/tokens-studio/figma-plugin). Many of the mentions of specific users are with respects to this initial post.
 
 Many users of design tokens use theming, such as the use of light and dark mode in their designs to show different variations. Themes and modes are not the only dimensions however, and many users end up using more complex ways to partition their tokens to account for this.
 
 To manage these tokens amd their various combinations, users usually end up adopting complicated naming taxonomies to keep all of the tokens unique within a global namespace.
 
-![Naming problems](./assets/naming.webp)
+![Naming problems](./docs/public/naming.webp)
 
-These solutions via naming are overly brittle, and in practice most users end up separating their various dimensions like `theme`, `mode` `variant` ,etc into different sets which are intended to override each other. The is also used to circumvent issues of changing tokens when using tools that attach a token directly on a design element. 
+These solutions via naming are overly brittle, and in practice most users end up separating their various dimensions like `theme`, `mode` `variant` ,etc into different sets which are intended to override each other. The is also used to circumvent issues of changing tokens when using tools that attach a token directly on a design element.
 
 How can we support arbitrary partitioning of tokens into sets with stable token names that can be used in design tools when swapping between these dimensions, preserve semantics, whilst also keeping tokens easily consumable by end tools?
 
@@ -47,20 +47,20 @@ Using the above parameters, the proposal is that we create standalone resolver f
 
 ## Background
 
-This approach is based off the existing work in the [Tokens Studio Plugin](https://github.com/tokens-studio/figma-plugin) which currently supports multidimensional tokens through the use of its `$themes.json` file that it exports with the following shape
+This approach is based on the existing work in the [Tokens Studio Plugin](https://github.com/tokens-studio/figma-plugin) which currently supports multidimensional tokens through the use of its `$themes.json` file that it exports with the following shape
 
 ```json5
 [
   {
     //An arbitrary generated id as a hex string
-    "id": "12323422b00f1594532b34551306745622567a",
-    "name": "brand",
-    "selectedTokenSets": {
+    id: '12323422b00f1594532b34551306745622567a',
+    name: 'brand',
+    selectedTokenSets: {
       // A set that is used to resolve references
-      "tokens/core": "source",
+      'tokens/core': 'source',
       // A set expected to be used in the output
-      "tokens/semantic": "enabled"
-    }
+      'tokens/semantic': 'enabled',
+    },
   },
 ]
 ```
@@ -73,128 +73,125 @@ An example of this in action would be the following where the brand X has differ
 [
   {
     //An arbitrary generated id as a hex string
-    "id": "2f440c32b00f1594532bf5b051306724e22136a",
-    "name": "Brand X | Light theme",
-    "selectedTokenSets": {
-      "brand/x/foundation/color/light": "source",
-      "foundation/color/appearance": "source",
-      "foundation/dimensions": "source",
-      "mode/light": "enabled",
-      "semantic/actions": "enabled",
-    }
+    id: '2f440c32b00f1594532bf5b051306724e22136a',
+    name: 'Brand X | Light theme',
+    selectedTokenSets: {
+      'brand/x/foundation/color/light': 'source',
+      'foundation/color/appearance': 'source',
+      'foundation/dimensions': 'source',
+      'mode/light': 'enabled',
+      'semantic/actions': 'enabled',
+    },
   },
   {
-    "id": "aa7e80632359bcfc4e09761f8d8f235d02eb41d7",
-    "name": "Brand X | Dark theme",
-    "selectedTokenSets": {
-      "brand/x/foundation/color/dark": "source",
-      "foundation/color/appearance": "source",
-      "foundation/dimensions": "source",
-      "mode/dark": "enabled",
-      "semantic/actions": "enabled",
-    }
-  }
+    id: 'aa7e80632359bcfc4e09761f8d8f235d02eb41d7',
+    name: 'Brand X | Dark theme',
+    selectedTokenSets: {
+      'brand/x/foundation/color/dark': 'source',
+      'foundation/color/appearance': 'source',
+      'foundation/dimensions': 'source',
+      'mode/dark': 'enabled',
+      'semantic/actions': 'enabled',
+    },
+  },
 ]
 ```
 
-*The token sets used are typically larger than what is shown and there are cases where there are 40+ sets*
+_The token sets used are typically larger than what is shown and there are cases where there are 40+ sets_
 
 There are a number of problems to this approach though. This is currently being applied to create a single addressable space for tokens and is not granular. If you wanted to create a much smaller set that represented each component for example, you could not as the output of the set resolution is a single named token set that is then used to reference the tokens.
 
-![Resolver image](./assets/Button-Breakdown.png)
+![Resolver image](./docs/public/Button-Breakdown.png)
 
-*The references to the tokens used in this styling are tied to a single addressable token space*
+_The references to the tokens used in this styling are tied to a single addressable token space_
 
 Whilst you could add more token sets as enabled if you wanted a button component by adding `comp/button` under `comp/body` for example, unless you are following strict naming, your button set might clash with other named tokens in the final generated token set. It is very likely that you would want to define dimensionality on a per component basis if your design system were evolving as well, so that new designers who were onboarding were not overwhelmed by the existing complexity of the system and can focus on isolated components.
 
 > In this we find the next property for the resolver that we would need to specify which is specificity. Different components might want to resolve in an isolated manner
-with different modifiers that might not be global or follow a different patterm
+> with different modifiers that might not be global or follow a different patterm
 
 @jjcm mentions this as well. Modes are based on how the sets want to be consumed by a user, and are not a property of the set themselves, hence why it also makes sense to use standalone files outside of the token spec to define these and apply them independently.
 
-
-
 ```json5
 {
-      /*
-      * Optional name of a resolver
-      */
-      "name": "Preset resolver",
-      /*
-      * Optional description
-      */
-      "description": "This handles the preset from Figma tokens",
-      /*
+  /*
+   * Optional name of a resolver
+   */
+  name: 'Preset resolver',
+  /*
+   * Optional description
+   */
+  description: 'This handles the preset from Figma tokens',
+  /*
       * A series of sets. The values of the tokens within these sets will
       correspond with the names of the outputted tokens.
 
       The order of these tokens is important. If keys for tokens are defined within them, the last token will be
       the effective value used
       */
-     "sets": [{
-          // An optional override of the name of the set. Can be used when tracing the resolution logic or when using `include` modifiers. Read further to see an include modifier in action
-          "name": "first",
-          // A reference to the tokens. This could vary depending on whether the resolution is occuring through the file system or in memory
-          // In this example we assume through the file system through a relative file called core.json
-          "values": ["foundation.json"]
-        },
-        {
-            "values": ["semantic.json"]
-        },
-        {
-            "values": ["button.json"]
-        },
-      ],
-      /*
+  sets: [
+    {
+      // An optional override of the name of the set. Can be used when tracing the resolution logic or when using `include` modifiers. Read further to see an include modifier in action
+      name: 'first',
+      // A reference to the tokens. This could vary depending on whether the resolution is occuring through the file system or in memory
+      // In this example we assume through the file system through a relative file called core.json
+      values: ['foundation.json'],
+    },
+    {
+      values: ['semantic.json'],
+    },
+    {
+      values: ['button.json'],
+    },
+  ],
+  /*
       * These modifiers act as "libraries" that are "imported" 
          and referencable by themselves and the source set
       */
-      "modifiers": [
+  modifiers: [
+    {
+      name: 'theme',
+      //Default value of the modifier
+      default: 'light',
+      //Optional parameter to rename the set prior to resolution
+      alias: 'theme',
+      //Identifies the modifier type. In this case it is an enumerated value with named key value pairs
+      type: 'enumerated',
+      values: [
         {
-          "name": "theme",
-          //Default value of the modifier
-          "default": "light",
-            //Optional parameter to rename the set prior to resolution
-          "alias":"theme",
-          //Identifies the modifier type. In this case it is an enumerated value with named key value pairs
-          "type":"enumerated",
-          "values": [
-            {
-              "name": "light",
-              "values": ["light.json"]
-            },
-            {
-              "name": "dark",
-              "values": ["dark.json"]
-            }
-          ]
+          name: 'light',
+          values: ['light.json'],
         },
         {
-          "name": "core",
-          // Potential optional parameter to hide this modifier in software that visualizes the resolver
-          "hidden": true,
-          "default": "core",
-          "type":"enumerated",
-          "values": [
-            {
-              "name":"core",
-              "values": ["core.json"]
-            }
-          ]
-        }
-      ]
-    }
+          name: 'dark',
+          values: ['dark.json'],
+        },
+      ],
+    },
+    {
+      name: 'core',
+      // Potential optional parameter to hide this modifier in software that visualizes the resolver
+      hidden: true,
+      default: 'core',
+      type: 'enumerated',
+      values: [
+        {
+          name: 'core',
+          values: ['core.json'],
+        },
+      ],
+    },
+  ],
+}
 ```
-
 
 > Note in the above example json specification since we do not allow arbitrary values, we have left out using the `$` prefix on properties as is used in the token spec.
 
 Please see the [json schema](./schema.json) for this for a more rigid definition
 
+For visual thinkers the following is in effect
 
-For visual thinkers the following is in effect 
-
-![Resolver image](./assets/resolvers.png)
+![Resolver image](./docs/public/resolvers.png)
 
 For the type property there are multiple possible values
 
@@ -233,9 +230,10 @@ For the type property there are multiple possible values
       ]
     };
 ```
+
 </details>
 
-Modifiers can have the same `name` attribute set. This helps to support more complex cases than just a simple switch. Since names being shared results in the same input property being read, multiple effects can occur due to the same input. 
+Modifiers can have the same `name` attribute set. This helps to support more complex cases than just a simple switch. Since names being shared results in the same input property being read, multiple effects can occur due to the same input.
 
 ## Motivation
 
@@ -269,36 +267,36 @@ As mentioned before, a single dimension is not sufficient. Even if we were to ad
 
 ```json5
 {
-  "$name": "intent-action-base-background",
-  "$value": [
+  $name: 'intent-action-base-background',
+  $value: [
     {
-      "$value": "white"
+      $value: 'white',
     },
     {
-      "$value": "darkgrey",
-      "color-scheme": "dark"
+      $value: 'darkgrey',
+      'color-scheme': 'dark',
     },
     {
-      "$value": "black",
-      "color-scheme": "dark",
-      "color-contrast": "high"
-    }
-  ]
+      $value: 'black',
+      'color-scheme': 'dark',
+      'color-contrast': 'high',
+    },
+  ],
 }
 ```
 
 ```js
-const token = tokens.find(t => t.name === 'intent-action-base-background');
-const value = token.value.find({ 
-  colorContrast: 'high' 
+const token = tokens.find((t) => t.name === 'intent-action-base-background');
+const value = token.value.find({
+  colorContrast: 'high',
 });
 ```
 
-As this should be an error if token references are not resolved fully during the resolution. 
+As this should be an error if token references are not resolved fully during the resolution.
 
 ## Resolution logic
 
-The resolution logic is fairly simple. Let's assume that a resolution request comes into a tool programmed in javascript 
+The resolution logic is fairly simple. Let's assume that a resolution request comes into a tool programmed in javascript
 
 ```js
 
@@ -310,15 +308,15 @@ const inputs :{
     //Additional inputs
 }
 
-//async as sourcing tokens from arbitrary storage locations is likely not synchronous 
+//async as sourcing tokens from arbitrary storage locations is likely not synchronous
 await resolve(resolver, inputs);
 ```
 
 The resolve function would perform a number of steps
 
-1. Validate the inputs. Input types such as the `enumerated` type have specific named values that are acceptable. If these are not matched by the provided input, throw an error and fail. 
+1. Validate the inputs. Input types such as the `enumerated` type have specific named values that are acceptable. If these are not matched by the provided input, throw an error and fail.
 
-2. Read the input sets and flatten them into a single new set 
+2. Read the input sets and flatten them into a single new set
 
 3. Select the appropriate modifiers and read the token files
 
@@ -330,152 +328,158 @@ The resolve function would perform a number of steps
 
 7. Resolve the aliases of the input set using values from the modifier set if a value is not found in the input set.
 
-The output of the resolution is a new token set. This token set can then be consumed by any [export tools](https://second-editors-draft.tr.designtokens.org/format/#export-tools) if need be as it is just a simple token set. 
+The output of the resolution is a new token set. This token set can then be consumed by any [export tools](https://second-editors-draft.tr.designtokens.org/format/#export-tools) if need be as it is just a simple token set.
 
-## Example calculation 
+## Example calculation
 
-We want to resolve the provided resolver: 
+We want to resolve the provided resolver:
 
 <details>
   <summary>Resolver</summary>
 
 ```json5
 {
-  "sets": [
+  sets: [
     {
-        "values": ["foundation.json","semantic.json","button.json"]
+      values: ['foundation.json', 'semantic.json', 'button.json'],
     },
   ],
-  "modifiers": [
+  modifiers: [
     {
-      "name": "theme",
-      "default": "light",
-      "alias":"theme",
-      "type":"enumerated",
-      "values": [
+      name: 'theme',
+      default: 'light',
+      alias: 'theme',
+      type: 'enumerated',
+      values: [
         {
-          "name": "light",
-          "values": ["light.json"]
+          name: 'light',
+          values: ['light.json'],
         },
         {
-          "name": "dark",
-          "values": ["dark.json"]
-        }
-      ]
-    }
-  ]
+          name: 'dark',
+          values: ['dark.json'],
+        },
+      ],
+    },
+  ],
 }
 ```
 
 </details>
 
-with the input 
+with the input
 
 ```json5
 {
-    "theme":"light"
+  theme: 'light',
 }
 ```
 
 We first validate that there is a modifier called `theme` that has an acceptable input value of `light`, then load the necessary sets.
 
-Let's assume the following tokens structures for the example 
+Let's assume the following tokens structures for the example
 
 `foundation.json`
+
 ```json5
 {
-    "gray": {
-        "$value": "coolgray",
-        "$type": "color"
-    },
-    "padding": {
-        "$value": "4px",
-        "$type": "dimension"
-    }
+  gray: {
+    $value: 'coolgray',
+    $type: 'color',
+  },
+  padding: {
+    $value: '4px',
+    $type: 'dimension',
+  },
 }
 ```
 
 `semantic.json`
+
 ```json5
 {
-    "primary":{
-        "$value": "{theme.accent}"
-    }
+  primary: {
+    $value: '{theme.accent}',
+  },
 }
 ```
 
 `button.json`
+
 ```json5
 {
-    "padding": {
-        "$value": "8px",
-        "$type": "dimension"
-    }
+  padding: {
+    $value: '8px',
+    $type: 'dimension',
+  },
 }
 ```
 
-
 We first squash all the above tokens into a single set that will be resolved with the modifier
 
-| Name  | Set    | Value   |Overriden   |   
-|:-|:-|:-|:-|
-| gray  | foundation  |  coolgray |   |   
-| padding  | foundation  | 4px  |  ✓ |   
-| primary | semantic   | {theme.accent}   |   |   
-| padding | button   | 8px   |   |   
+| Name    | Set        | Value          | Overriden |
+| :------ | :--------- | :------------- | :-------- |
+| gray    | foundation | coolgray       |           |
+| padding | foundation | 4px            | ✓         |
+| primary | semantic   | {theme.accent} |           |
+| padding | button     | 8px            |           |
 
 This results in :
 
 ```json5
 {
-    "gray": {
-        "$value": "coolgray",
-        "$type": "color"
-    },
-    "primary": {
-        "$value": "{theme.accent}"
-    },
-    "padding": {
-        "$value": "8px",
-        "$type": "dimension"
-    }
+  gray: {
+    $value: 'coolgray',
+    $type: 'color',
+  },
+  primary: {
+    $value: '{theme.accent}',
+  },
+  padding: {
+    $value: '8px',
+    $type: 'dimension',
+  },
 }
 ```
 
 Now the modifiers are :
 
 `light.json`
+
 ```json5
 {
-    "accent": {
-        "$value": "lightblue", // for our light theme we want a lighter shade of blue
-        "$type": "color"
-    }
+  accent: {
+    $value: 'lightblue', // for our light theme we want a lighter shade of blue
+    $type: 'color',
+  },
 }
 ```
+
 `dark.json`
+
 ```json5
 {
-    "accent": {
-        "$value": "darkblue", // for our dark theme we want a darker shade of blue
-        "$type": "color"
-    }
+  accent: {
+    $value: 'darkblue', // for our dark theme we want a darker shade of blue
+    $type: 'color',
+  },
 }
 ```
-Note in actual system that implement resolver logic we would not need to load both light and dark json files, only what is specified in the modifier. We show both here for illustrative purposes. 
+
+Note in actual system that implement resolver logic we would not need to load both light and dark json files, only what is specified in the modifier. We show both here for illustrative purposes.
 
 Assuming `light` was picked as the theme, we would first alias the light set using `theme` and flatten the values, resulting in :
 
 ```json5
 {
-    //These tokens are referenced by the input values and thus we will see them reflect in the output
-    "theme":{
-        "accent":{
-            "$value": "lightblue", // {theme.accent} = lightblue in light.json
-            "$type":"color"
-        }
-    }
-    // If there are additional tokens defined here that are not referenced by input values they will not be part of the output
+  //These tokens are referenced by the input values and thus we will see them reflect in the output
+  theme: {
+    accent: {
+      $value: 'lightblue', // {theme.accent} = lightblue in light.json
+      $type: 'color',
+    },
+  },
+  // If there are additional tokens defined here that are not referenced by input values they will not be part of the output
 }
 ```
 
@@ -483,26 +487,26 @@ Now resolution would occur. We iterate through the tokens within our input set t
 
 ```json5
 {
-    "primary": {
-        "$value": "lightblue",
-        "$type": "color"
-    },
-    "gray": {
-        "$value": "coolgray",
-        "$type": "color"
-    },
-    "padding":{
-        "$value": "8px",
-        "$type": "dimension"
-    }
+  primary: {
+    $value: 'lightblue',
+    $type: 'color',
+  },
+  gray: {
+    $value: 'coolgray',
+    $type: 'color',
+  },
+  padding: {
+    $value: '8px',
+    $type: 'dimension',
+  },
 }
 ```
 
-**Note** if `theme.accent` had itself been a reference, we would recursively resolve the reference using the same logic.  
+**Note** if `theme.accent` had itself been a reference, we would recursively resolve the reference using the same logic.
 
-## Usage with export tools 
+## Usage with export tools
 
-For large design systems that might have multiple brands, the resolution of their tokens as they are finally consumed by the frontend code might be permuting multiple modifiers whilst holding other constant. Eg in an example webapp, the brand `foo` is known up front and will be the only such value, however the app supports multiple themes and modes. 
+For large design systems that might have multiple brands, the resolution of their tokens as they are finally consumed by the frontend code might be permuting multiple modifiers whilst holding other constant. Eg in an example webapp, the brand `foo` is known up front and will be the only such value, however the app supports multiple themes and modes.
 
 Either multiple resolvers could be defined on a per brand level or the value of the brand in a single resolver could be held constant whilst evaluating the combinations of the other modifiers.
 
@@ -510,48 +514,47 @@ This would likely be an architectural descision depending on whether the brands 
 
 @connorjsmith makes a valid point of the final tools such as `style-dictionary` deciding the final form of the tokens as a list of css variables, as well as optimizing the final form. Two resolved sets, with light and dark mode set respectively for example, could then be analyzed to optimize the final form of the tokens and removing redundant values .
 
-
-## Resolution aliasing 
+## Resolution aliasing
 
 Consider the following set called `size.json`.
 
 ```json5
 {
-  "sm": {
-    "$value": "1px",
-    "$type": "dimension"
+  sm: {
+    $value: '1px',
+    $type: 'dimension',
   },
-  "lg": {
-    "$value": "10px",
-    "$type": "dimension"
-  }
+  lg: {
+    $value: '10px',
+    $type: 'dimension',
+  },
 }
 ```
 
-Let us assume that we want this file to be namespaced so that we can reference this in one of the sets to be resolved. Altering the file directly is not a good solution as it might introduce naming brittleness, as well as potentially have a number of other restrictions like being read-only, owned by someone else, etc. 
+Let us assume that we want this file to be namespaced so that we can reference this in one of the sets to be resolved. Altering the file directly is not a good solution as it might introduce naming brittleness, as well as potentially have a number of other restrictions like being read-only, owned by someone else, etc.
 
-> This also speaks to an assumption we have never mentioned before. It is being assumed right now that everyone is in complete control of their sets, but if we want to support someone referencing another token set(s) eg Material, they should be able to just reference the values without having to modify them, similar to how we import modules in programming. 
+> This also speaks to an assumption we have never mentioned before. It is being assumed right now that everyone is in complete control of their sets, but if we want to support someone referencing another token set(s) eg Material, they should be able to just reference the values without having to modify them, similar to how we import modules in programming.
 
-Rather we could dynamically namespace this when its loaded into the system through an alias like `foo` to result in 
+Rather we could dynamically namespace this when its loaded into the system through an alias like `foo` to result in
 
 ```json5
 {
-    "foo":{
-        "sm": {
-            "$value": "1px",
-            "$type": "dimension"
-        },
-         "lg": {
-            "$value": "10px",
-            "$type": "dimension"
-        }
-    }
+  foo: {
+    sm: {
+      $value: '1px',
+      $type: 'dimension',
+    },
+    lg: {
+      $value: '10px',
+      $type: 'dimension',
+    },
+  },
 }
 ```
 
-This allows us to consume other peoples token libraries without directly modifying their files. 
+This allows us to consume other peoples token libraries without directly modifying their files.
 
-### Real world use case 
+### Real world use case
 
 The GitHub Primer token sets can be used as an example of applying the resolver to a large system.
 
@@ -562,7 +565,7 @@ The theme specifier [here](https://github.com/primer/primitives/blob/63cc53911ba
 - General
 - Tritanopia
 - Standard Colorblindness
-- High contrast 
+- High contrast
 
 **Dark**
 
@@ -576,73 +579,78 @@ The theme specifier [here](https://github.com/primer/primitives/blob/63cc53911ba
 
 Starting with the `light` mode, we see that there are common sets purely used to reference that should not be used for the output.
 
-These are the `src/tokens/base/color/light/light.json5` set and the  `src/tokens/base/color/light/light.high-contrast.json5` which is used for `light-high-contrast`. Since the `src/tokens/base/color/light/light.json5` is used for all values, this could be set as a `include` in the modifiers 
+These are the `src/tokens/base/color/light/light.json5` set and the `src/tokens/base/color/light/light.high-contrast.json5` which is used for `light-high-contrast`. Since the `src/tokens/base/color/light/light.json5` is used for all values, this could be set as a `include` in the modifiers
 
-**Note** In this case we are assuming that this resolver exists in the `src/tokens` folder 
+**Note** In this case we are assuming that this resolver exists in the `src/tokens` folder
 
 <details>
   <summary>Resolver</summary>
 
 ```json5
 {
-  "sets":[{
-    //The current solution expects to get actual values from the light and dark base sets as the output. As this is dynamic depending on the dimension. We include an empty set here which will be overriden by the modifier
-    "name":"theme",
-    "values": []
-  }],
-  "modifiers":[
+  sets: [
+    {
+      //The current solution expects to get actual values from the light and dark base sets as the output. As this is dynamic depending on the dimension. We include an empty set here which will be overriden by the modifier
+      name: 'theme',
+      values: [],
+    },
+  ],
+  modifiers: [
     //This is a common set that is used for all resolutions, but is not expected in the output so we use it purely for context
     {
-      "name":"base",
-      "type":"enumerated",
-      "default":"common",
-      "values": [
+      name: 'base',
+      type: 'enumerated',
+      default: 'common',
+      values: [
         {
-          "name":"common",
-          "values": ["src/tokens/functional/color/scales.json5"]
-        }
-      ]
+          name: 'common',
+          values: ['src/tokens/functional/color/scales.json5'],
+        },
+      ],
     },
     {
-      "name":"theme",
-      "type":"include",
-      "default":"light",
-      "values": [
+      name: 'theme',
+      type: 'include',
+      default: 'light',
+      values: [
         {
-          "name":"light",
-          "values": ["base/color/light/light.json5"]
+          name: 'light',
+          values: ['base/color/light/light.json5'],
         },
-         {
-          "name":"dark",
-          "values": ["base/color/dark/dark.json5"]
-        }
-      ]
+        {
+          name: 'dark',
+          values: ['base/color/dark/dark.json5'],
+        },
+      ],
     },
     //An example of a repeated modifier. The above performs a different action to the the below defined modifier with this providing a context source to read from
     {
-
-      "name":"theme",
-      "type":"enumerated",
-      "default":"light",
-      "values": [
+      name: 'theme',
+      type: 'enumerated',
+      default: 'light',
+      values: [
         {
-          "name":"light",
-         "values": ["src/tokens/functional/shadow/light.json5`,`src/tokens/functional/border/light.json5"]
+          name: 'light',
+          values: [
+            'src/tokens/functional/shadow/light.json5`,`src/tokens/functional/border/light.json5',
+          ],
         },
-         {
-          "name":"dark",
-          "values": ["src/tokens/functional/shadow/dark.json5`,`src/tokens/functional/border/dark.json5"]
-        }
-      ]
+        {
+          name: 'dark',
+          values: [
+            'src/tokens/functional/shadow/dark.json5`,`src/tokens/functional/border/dark.json5',
+          ],
+        },
+      ],
     },
     //etc, we add visual modifiers for each of the common visual modifiers
-  ]
+  ],
 }
 ```
 
 </details>
 
-Since the high contrast set is included, but *only* if it is using this modifier, we use a `include` modifier
+Since the high contrast set is included, but _only_ if it is using this modifier, we use a `include` modifier
 
 <details>
   <summary>Updated resolver</summary>
@@ -678,6 +686,7 @@ Since the high contrast set is included, but *only* if it is using this modifier
  ]
 }
 ```
+
 </details>
 
 ## Orthogonality
@@ -686,7 +695,7 @@ Within the possible dimensions we identify a concept of orthogonality to determi
 
 In this first diagram, two independent sets are used to resolve the final value. Any change to the `Mode` choice does not affect the theme set used.
 
-```mermaid 
+```mermaid
 flowchart TD
     Mode(Mode) --> Light
     Mode -->Dark
@@ -695,7 +704,8 @@ flowchart TD
     Light-->Final[[Final]]
     Samurai-->Final
 ```
-In this diagram, the choice of mode combined with the theme changes which set is used for final resolution. If the `mode` modifier is changed, the choice of potential candidates for `theme` changes as well 
+
+In this diagram, the choice of mode combined with the theme changes which set is used for final resolution. If the `mode` modifier is changed, the choice of potential candidates for `theme` changes as well
 
 ```mermaid
 flowchart TD
@@ -723,7 +733,7 @@ flowchart TD
 
 In this case the choice for resolution becomes contextual. ONLY if the chosen mode is `Light` do you have the option of choosing the `Pirate` theme and if you do chose both `Dark` and `Pirate` you have made an invalid selection.
 
-This is a basic example using only 2 modifiers but once other modifiers such as "Brand", "Surface", etc are included into the mix, more logic would be necessary to both handle the resolution of this, and also to express what combinations are allowed. This adds complexity to the overall solution. 
+This is a basic example using only 2 modifiers but once other modifiers such as "Brand", "Surface", etc are included into the mix, more logic would be necessary to both handle the resolution of this, and also to express what combinations are allowed. This adds complexity to the overall solution.
 
 ## Future extensions
 
@@ -735,14 +745,13 @@ This is only really useful if we cannot create precomputed token sets, but might
 
 In the example shown, if the visual modifier could not be normalized to be completely orthogonal to the mode, via the use of a semantic layer which could handle the mapping, ie
 
-
 ```mermaid
 graph LR
   A["In-Scope Visual Tokens"]--> B
   B["Semantic Layer"] --> C["Output"]
 ```
 
-and the choice of sets is dynamic because of it, eg `src/tokens/functional/color/light/overrides/light.protanopia-deuteranopia.json5` vs `src/tokens/functional/color/dark/overrides/dark.protanopia-deuteranopia.json5`, 
+and the choice of sets is dynamic because of it, eg `src/tokens/functional/color/light/overrides/light.protanopia-deuteranopia.json5` vs `src/tokens/functional/color/dark/overrides/dark.protanopia-deuteranopia.json5`,
 then the output would depend upon the mode modifier for the visual modifier. To prevent overloading the complexity of one resolver for the different dimensions, one resolver would just read the output of another resolver either directly or through a precomputed set as previously mentioned. The alternative would be to change the resolver specification to express the acceptable combinations through the use of a tree structure that could be pruned. Looking back at our example of a non orthogonal modifier structure :
 
 ```mermaid
@@ -755,11 +764,11 @@ flowchart TD
     Dark(Dark)-->SamuraiD[Samurai:Dark]
     SamuraiL-->Final[[Final]]
 ```
+
 Assuming this is valid and enforceable, this also reduces the space to only `4` sets as opposed to the `3 x 2 =6` permutations for each `mode` with each `theme`. For design systems that want to use a resolver spec as a source of truth, they could use it to construct a graph showing the different possible variations of a component, making it explicit which combinations are valid and invalid for the different dimensions. This could likely be useful in cases where the choice of the `brand` dimensions heavily affects the possible values of the other modifiers as brands might offer completely different combinations. This should likely be addressed by the use of seperate resolvers if they are heterogenous in their modifier usage, but regardless this could be more efficient for export tools.
 
-As @romainmenke mentioned there will likely need to be some form of bridge connecting the possible values of a token and then providing some form of metadata to it to then be used in the various platforms, likely some form of output with conditional rules. Seeing as this is likely going to be dynamic as it needs to be evaluated at runtime (eg screen size) its outside the scope of what the resolver on its own might do without some additional system that could be embedded into a front end to do this. 
+As @romainmenke mentioned there will likely need to be some form of bridge connecting the possible values of a token and then providing some form of metadata to it to then be used in the various platforms, likely some form of output with conditional rules. Seeing as this is likely going to be dynamic as it needs to be evaluated at runtime (eg screen size) its outside the scope of what the resolver on its own might do without some additional system that could be embedded into a front end to do this.
 
 A modifier that is not acceptable for this form of resolving is an example such as component state. A component can exist in multiple different potential states, eg Focused, Hover and in Error state, and each of these states might have different levels of precedence, such as the red color of the background always being shown.
 
 Lastly the Primer examples shows an interesting point of using glob based selection of the sets. This could be useful in solving the issue shown above with regards to the file paths of the visual afflictions being dependent on the mode. If we potentially allow string interpolation based on the modifer inputs that could simplify the structuring and not require refactoring of semantic layers to enable this approach
-

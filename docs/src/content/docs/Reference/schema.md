@@ -1,3 +1,8 @@
+---
+title: Schema
+---
+
+```json
 {
   "$id": "https://schemas.tokens.studio/prototype/resolver.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -73,3 +78,4 @@
   },
   "required": ["sets", "modifiers"]
 }
+```

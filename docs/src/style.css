@@ -1,0 +1,11 @@
+.expressive-code pre.mermaid {
+  justify-content: center;
+}
+
+.expressive-code pre.mermaid *:not(path) {
+  all: revert-layer;
+}
+
+.hidden {
+  display: none !important;
+}

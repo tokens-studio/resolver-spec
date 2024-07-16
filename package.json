@@ -1,0 +1,65 @@
+{
+  "name": "@tokens-studio/resolver-spec",
+  "private": true,
+  "version": "0.0.0",
+  "description": "DTCG draft for token sets & themes resolution",
+  "keywords": [
+    "design",
+    "tokens",
+    "DTCG",
+    "Design Token Community Group",
+    "themes",
+    "theming",
+    "resolver"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly",
+    "docs:start": "astro dev --root ./docs",
+    "docs:build": "astro check  --root ./docs && astro build --root ./docs",
+    "docs:preview": "astro preview --root ./docs",
+    "format": "run-p format:*",
+    "format:prettier": "prettier \"**/*.{ts,js,json,md,mdx}\" \"package.json\" --write",
+    "lint": "run-p lint:*",
+    "lint:prettier": "prettier \"**/*.{ts,js,json,md,mdx}\" \"package.json\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "lint:types": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,json,md,mdx}": "prettier --list-different"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "always",
+    "trailingComma": "all",
+    "printWidth": 100
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tokens-studio/resolver-spec.git"
+  },
+  "author": "Amazon",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/tokens-studio/resolver-spec/issues"
+  },
+  "homepage": "https://github.com/tokens-studio/resolver-spec",
+  "devDependencies": {
+    "@astrojs/check": "^0.8.1",
+    "@astrojs/starlight": "^0.25.1",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "astro": "^4.11.5",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "mermaid": "^10.9.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.3"
+  }
+}
