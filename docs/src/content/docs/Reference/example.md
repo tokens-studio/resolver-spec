@@ -41,12 +41,6 @@ title: Example
   modifiers: [
     {
       name: 'theme',
-      //Default value of the modifier
-      default: 'light',
-      //Optional parameter to rename the set prior to resolution
-      alias: 'theme',
-      //Identifies the modifier type. In this case it is an enumerated value with named key value pairs
-      type: 'enumerated',
       values: [
         {
           name: 'light',
@@ -57,19 +51,27 @@ title: Example
           values: ['dark.json'],
         },
       ],
+      meta: {
+        // Default value of the modifier
+        default: 'light',
+        // Optional parameter to rename the set prior to resolution
+        alias: 'theme',
+        // Identifies the modifier type. In this case it is an enumerated value with named key value pairs
+      },
     },
     {
       name: 'core',
-      // Potential optional parameter to hide this modifier in software that visualizes the resolver
-      hidden: true,
-      default: 'core',
-      type: 'enumerated',
       values: [
         {
           name: 'core',
           values: ['core.json'],
         },
       ],
+      meta: {
+        // Potential optional parameter to hide this modifier in software that visualizes the resolver
+        hidden: true,
+        default: 'core',
+      },
     },
   ],
 }

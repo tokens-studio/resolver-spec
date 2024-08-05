@@ -62,5 +62,6 @@ export default {
   customCss: ['./src/style.css'],
   components: {
     Head: './src/components/Head.astro',
+    Footer: './src/components/Footer.astro',
   },
 } as StarlightUserConfig;
