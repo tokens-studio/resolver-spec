@@ -2,7 +2,7 @@
 title: Theme Resolver Spec
 ---
 
-The theme resolver spec aims to standardize the way in which multiple Design Tokens sets can be combined and how themability applies to these tokensets.
+The theme resolver spec aims to standardize the way in which multiple Design Tokens sets can be combined and how themability applies to these token sets.
 
 It is proposed to be an additional module within [Design Token Community Group draft specification](https://tr.designtokens.org/), e.g. [Format](https://tr.designtokens.org/format/) module defines a single design token file.
 
