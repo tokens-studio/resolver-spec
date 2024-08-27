@@ -1,3 +1,5 @@
 node_modules
 .astro/
+.history/
 dist/
+.DS_Store
