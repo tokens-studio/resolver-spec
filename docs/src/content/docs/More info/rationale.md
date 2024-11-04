@@ -109,9 +109,9 @@ Now that you have some background information and the problem statement, it make
 
 1. Having named enumerated possibilities indicates to documentation systems the different possible dimensions. E.g. a button resolver could be identified as supporting 3 different brands, 2 modes and 4 themes for example. This is something that cannot be inferred currently. As @romainmenke mentions all possible permutations must able to be detected for code generation tools. By explicitly defining the possible values, this should help.
 
-> A point to mention alongside this is the detection of [orthogonality](#orthogonality) surrounding the modifiers. Certain modifiers might override all others, eg `disabled` which might be a boolean. This might not potentially interact with any other modifier and as such is orthogonal to them and does not result in a value in the permutation matrix
+> A point to mention alongside this is the detection of [orthogonality](#orthogonality) surrounding the modifiers. Certain modifiers might override all others, e.g. `disabled` which might be a boolean. This might not potentially interact with any other modifier and as such is orthogonal to them and does not result in a value in the permutation matrix
 
-2. Lower cognitive load. As mentioned keeping all of this within a single global namespace with $themes means a designer needs to keep track of all the different tokens that are currently being used. If they could instead focus purely on logic related to a component, surface, etc by reducing the scope of tokens involved they can intuit the relations between tokens and sets easier.
+2. Lower cognitive load. As mentioned keeping all of this within a single global namespace with `$themes` means a designer needs to keep track of all the different tokens that are currently being used. If they could instead focus purely on logic related to a component, surface, etc by reducing the scope of tokens involved they can intuit the relations between tokens and sets easier.
 
 3. Faster resolution. For enterprise systems that have potentially thousands of tokens with multiple combinations, getting the final values becomes very slow assuming O(n) resolution time multiplied by O(m) for each dimension. By reducing the amount of tokens in scope, this should be significantly faster. Also since the relationships for which sets consume which other sets are within the resolver, a system could also know which resolvers to cache and which to re-evaluate
 
@@ -164,13 +164,13 @@ As this should be an error if token references are not resolved fully during the
 
 ## Resolution logic
 
-The resolution logic is fairly simple. Let's assume that a resolution request comes into a tool programmed in javascript
+The resolution logic is fairly simple. Let's assume that a resolution request comes into a tool programmed in JavaScript:
 
 ```js
 // Any acceptable resolver definition
 const resolver = //...
 
-const inputs :{
+const inputs = {
   theme:'dark'
   // Additional inputs
 }
@@ -373,7 +373,7 @@ Either multiple resolvers could be defined on a per brand level or the value of 
 
 This would likely be an architectural descision depending on whether the brands have anything in common or not or otherwise require seperate resolvers for governance reasons.
 
-@connorjsmith makes a valid point of the final tools such as `style-dictionary` deciding the final form of the tokens as a list of css variables, as well as optimizing the final form. Two resolved sets, with light and dark mode set respectively for example, could then be analyzed to optimize the final form of the tokens and removing redundant values .
+@connorjsmith makes a valid point of the final tools such as `style-dictionary` deciding the final form of the tokens as a list of CSS variables, as well as optimizing the final form. Two resolved sets, with light and dark mode set respectively for example, could then be analyzed to optimize the final form of the tokens and removing redundant values.
 
 ## Resolution aliasing
 
@@ -398,7 +398,7 @@ Let us assume that we want this file to be namespaced so that we can reference t
 This also speaks to an assumption we have never mentioned before. It is being assumed right now that everyone is in complete control of their sets, but if we want to support someone referencing another token set(s) eg Material, they should be able to just reference the values without having to modify them, similar to how we import modules in programming.
 :::
 
-Rather we could dynamically namespace this when its loaded into the system through an alias like `foo` to result in
+Rather we could dynamically namespace this when it's loaded into the system through an alias like `foo` to result in:
 
 ```json
 {
@@ -421,7 +421,7 @@ This allows us to consume other peoples token libraries without directly modifyi
 
 The GitHub Primer token sets can be used as an example of applying the resolver to a large system.
 
-The theme specifier [here](https://github.com/primer/primitives/blob/63cc53911bada7ed17cdfbec8a4c99b0a38507f9/scripts/themes.config.ts#L64) shows a case where we have two dimensions, the `light` and `dark` mode, in tandem with a visual impairment dimension that supports:
+[The theme specifier](https://github.com/primer/primitives/blob/63cc53911bada7ed17cdfbec8a4c99b0a38507f9/scripts/themes.config.ts#L64) shows a case where we have two dimensions, the `light` and `dark` mode, in tandem with a visual impairment dimension that supports:
 
 **Light**
 
