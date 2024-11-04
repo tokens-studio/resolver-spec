@@ -269,10 +269,10 @@ Let's assume the following tokens structures for the example:
 
 ```json5
 {
-  "padding": {
-    "$value": "8px",
-    "$type": "dimension",
-  }
+  padding: {
+    $value: '8px',
+    $type: 'dimension',
+  },
 }
 ```
 
@@ -320,10 +320,10 @@ Now the modifiers are :
 
 ```json5
 {
-  "accent": {
-    "$value": "darkblue", // for our dark theme we want a darker shade of blue
-    "$type": "color",
-  }
+  accent: {
+    $value: 'darkblue', // for our dark theme we want a darker shade of blue
+    $type: 'color',
+  },
 }
 ```
 
@@ -334,10 +334,10 @@ Assuming `light` was picked as the theme, we would first alias the light set usi
 ```json5
 {
   // These tokens are referenced by the input values and thus we will see them reflect in the output
-  "theme": {
-    "accent": {
-      "$value": "lightblue", // {theme.accent} = lightblue in light.json
-      "$type": "color",
+  theme: {
+    accent: {
+      $value: 'lightblue', // {theme.accent} = lightblue in light.json
+      $type: 'color',
     },
   },
   // If there are additional tokens defined here that are not referenced by input values they will not be part of the output
@@ -348,17 +348,17 @@ Now resolution would occur. We iterate through the tokens within our input set t
 
 ```json5
 {
-  "primary": {
-    "$value": "lightblue",
-    "$type": "color",
+  primary: {
+    $value: 'lightblue',
+    $type: 'color',
   },
-  "gray": {
-    "$value": "coolgray",
-    "$type": "color",
+  gray: {
+    $value: 'coolgray',
+    $type: 'color',
   },
-  "padding": {
-    "$value": "8px",
-    "$type": "dimension",
+  padding: {
+    $value: '8px',
+    $type: 'dimension',
   },
 }
 ```
@@ -381,13 +381,13 @@ Consider the following set called `size.json`.
 
 ```json5
 {
-  "sm": {
-    "$value": "1px",
-    "$type": "dimension",
+  sm: {
+    $value: '1px',
+    $type: 'dimension',
   },
-  "lg": {
-    "$value": "10px",
-    "$type": "dimension",
+  lg: {
+    $value: '10px',
+    $type: 'dimension',
   },
 }
 ```
