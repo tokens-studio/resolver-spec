@@ -1,0 +1,27 @@
+---
+title: Style Dictionary
+---
+
+## Full implementation with Style Dictionary
+
+Below we will demo what it would look like to use the resolver spec.
+Underneath we will display the resolver and token files in a Monaco editor instance.
+
+We have 3 token sets:
+
+- core
+- dark
+- light
+
+Below is the output of tokens depending on which modifiers are active.
+
+<br />
+<sd-demo>
+  <div style="height: 120%" slot="monaco-editor"></div>
+</sd-demo>
+
+Depending on the modifier for mode (either dark or light), it will use either core + `'dark.json'` or core + `'light.json'`.
+Within modifier values, you can use the filename of a tokens file e.g. `'dark.json'`,
+but it's also possible to reference the set name e.g. `'core'`, which means any file within that set will be included.
+
+Referencing by name can be useful if you've got multiple files under your `'core'` sets collection.

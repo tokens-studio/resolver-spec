@@ -1,4 +1,5 @@
 import mermaid from 'mermaid';
+import type { SdDemo } from './components/sd-demo/sd-demo';
 
 const themeAttr = 'data-theme'; // starlight theme attribute
 
@@ -27,6 +28,14 @@ async function renderMermaid(theme: 'dark' | 'light') {
 
 async function swapTheme(theme: 'dark' | 'light') {
   await renderMermaid(theme);
+  const demoTag = 'sd-demo';
+  await customElements.whenDefined(demoTag);
+  const sdDemos = document.querySelectorAll(demoTag) as NodeListOf<SdDemo>;
+  [...sdDemos].forEach((demo) => {
+    demo.hasInitialized.then(() => {
+      demo.editor._themeService.setTheme(`my-${theme}-theme`);
+    });
+  });
 }
 
 function handleThemeChange() {
@@ -49,7 +58,25 @@ function handleThemeChange() {
   });
 }
 
+function lazilyLoadCEs(CEs: string[]) {
+  CEs.forEach((CE) => {
+    const firstInstance = document.querySelector(CE);
+    if (firstInstance) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Conditionally load the Web Component definition if we find an instance of it.
+            import(`./components/${CE}/${CE}.ts`);
+          }
+        });
+      });
+      observer.observe(firstInstance);
+    }
+  });
+}
+
 async function setup() {
   handleThemeChange();
+  lazilyLoadCEs(['sd-demo']);
 }
 setup();

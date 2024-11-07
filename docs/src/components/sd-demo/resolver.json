@@ -1,0 +1,29 @@
+{
+  "name": "Demo resolver",
+  "description": "This demonstrates the resolver spec",
+  "sets": [
+    {
+      "name": "core",
+      "values": ["core.json"]
+    },
+    {
+      "name": "modes",
+      "values": ["light.json", "dark.json"]
+    }
+  ],
+  "modifiers": [
+    {
+      "name": "mode",
+      "values": [
+        {
+          "name": "light",
+          "values": ["core", "light.json"]
+        },
+        {
+          "name": "dark",
+          "values": ["core", "dark.json"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "colors": {
+    "$type": "color",
+    "background": {
+      "primary": {
+        "$value": "{colors.orange.700}"
+      }
+    },
+    "foreground": {
+      "primary": {
+        "$value": "{colors.gray.900}"
+      }
+    }
+  }
+}

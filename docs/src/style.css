@@ -9,3 +9,11 @@
 .hidden {
   display: none !important;
 }
+
+.monaco-scrollable-element {
+  margin-top: 0 !important;
+}
+
+.monaco-editor div {
+  margin-top: 0 !important;
+}
