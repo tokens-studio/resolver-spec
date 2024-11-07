@@ -28,6 +28,24 @@ export default {
   tableOfContents: {
     maxHeadingLevel: 4,
   },
+  sidebar: [
+    {
+      label: 'Overview',
+      link: '',
+    },
+    {
+      label: 'More info',
+      autogenerate: { directory: 'info' },
+    },
+    {
+      label: 'Reference',
+      autogenerate: { directory: 'reference' },
+    },
+    {
+      label: 'Examples',
+      autogenerate: { directory: 'examples' },
+    },
+  ],
   head: [
     {
       tag: 'meta',
