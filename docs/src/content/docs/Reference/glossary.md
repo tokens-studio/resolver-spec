@@ -48,7 +48,7 @@ A design token resolver is a function responsible for creating design tokens res
 
 ## Token space
 
-TBD
+A single large token set that then forms the final set of tokens you can address with keys like `colors.foo.500`.
 
 ## Resolution request
 
