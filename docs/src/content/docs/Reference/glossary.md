@@ -40,7 +40,7 @@ A modifier token set is a group of token used by source token set(s). You'll usu
 
 ## Source
 
-A source set is combination of one or several modifier set used to match a specific use case. For instance, generating a themes token sets based on several modifier sets.
+A source set is a combination of one or several modifier set used to match a specific use case. For instance, generating a themes token sets based on several modifier sets.
 
 ## Resolver
 
