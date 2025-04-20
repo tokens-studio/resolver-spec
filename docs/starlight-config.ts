@@ -20,11 +20,18 @@ export default {
     baseUrl: 'https://github.com/tokens-studio/resolver-spec/edit/main/docs',
   },
   // favicon: '/favicon.png',
-  social: {
-    github: 'https://github.com/tokens-studio/resolver-spec',
-    slack:
-      'https://join.slack.com/t/tokens-studio/shared_invite/zt-1p8ea3m6t-C163oJcN9g3~YZTKRgo2hg',
-  },
+  social: [
+    {
+      label: 'GitHub',
+      icon: 'github',
+      href: 'https://github.com/tokens-studio/resolver-spec',
+    },
+    {
+      label: 'Slack',
+      icon: 'slack',
+      href: 'https://join.slack.com/t/tokens-studio/shared_invite/zt-1p8ea3m6t-C163oJcN9g3~YZTKRgo2hg',
+    },
+  ],
   tableOfContents: {
     maxHeadingLevel: 4,
   },
@@ -80,6 +87,7 @@ export default {
   customCss: ['./src/style.css'],
   components: {
     Head: './src/components/Head.astro',
+    Header: './src/components/Header.astro',
     Footer: './src/components/Footer.astro',
   },
 } as StarlightUserConfig;
