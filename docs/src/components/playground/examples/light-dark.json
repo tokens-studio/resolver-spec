@@ -1,0 +1,16 @@
+{
+  "sets": [],
+  "modifiers": [
+    {
+      "name": "theme",
+      "type": "enumerated",
+      "values": [
+        { "name": "Light", "values": ["color/light.json"] },
+        { "name": "Light High Contrast", "values": ["color/light.high-contrast.json"] },
+        { "name": "Dark", "values": ["color/dark.json"] },
+        { "name": "Dark High Contrast", "values": ["color/dark.high-contrast.json"] },
+        { "name": "Dark Dimmed", "values": ["color/dark.high-contrast.json"] }
+      ]
+    }
+  ]
+}

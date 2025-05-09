@@ -20,6 +20,6 @@
     "skipLibCheck": true,
     "declaration": true
   },
-  "include": ["**/*.js", "**/*.ts"],
+  "include": ["src", "docs"],
   "exclude": ["node_modules", "docs/dist"]
 }
