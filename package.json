@@ -52,8 +52,8 @@
   "homepage": "https://github.com/tokens-studio/resolver-spec",
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/starlight": "^0.34.0",
-    "@astrojs/svelte": "^7.0.10",
+    "@astrojs/starlight": "^0.34.3",
+    "@astrojs/svelte": "^7.0.13",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@tokens-studio/sd-transforms": "^1.2.7",
