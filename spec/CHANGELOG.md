@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2024-12-19
+
+This release incorporates editorial improvements and community feedback summarized from the [Design Tokens Resolvers Specification Working Copy](https://docs.google.com/document/d/1LOtdiS8R903R7RwDd22JiDxljh51l7Xfy9M1D-p-9mU/edit?tab=t.0#heading=h.svkctwfaregs), identifying key areas for future specification development.
+
+### Added
+
+-   **Resolution Aliasing Section:** Added a complete new section explaining aliasing/namespacing concepts with detailed examples and JSON Schema definition.
+-   **Community Feedback Integration:** Incorporated editorial comments and issues from the working copy document throughout the specification, highlighting ambiguities, inconsistencies, and areas needing clarification.
+-   **Performance Considerations:** Added discussions about real-world resolution scenarios including full upfront resolution, lazy resolution, and partial resolution for complex components.
+-   **JSON Schema Reference:** Included complete JSON Schema definition for resolver structure validation.
+
+### Issues Identified (from Working Copy)
+
+-   **Terminology Clarifications:** Highlighted need for better definitions of "process", "inputs", "dimensions" vs "contexts", and disambiguation between different types of aliasing.
+-   **File Extension Recommendations:** Suggested using `.tokens.json` extension to align with Design Tokens Format Specification conventions.
+-   **Schema Structure Improvements:** Identified need to move functional properties out of generic `meta` property into formal schema definitions.
+-   **Modifier Structure Concerns:** Raised questions about using arrays vs objects for modifiers to ensure uniqueness and prevent conflicts.
+-   **Merging Logic Specification:** Highlighted need for detailed DTCG-compliant merging algorithms and conflict resolution rules.
+-   **Precedence and Order:** Identified need for explicit precedence rules when multiple modifiers affect the same tokens.
+-   **Orthogonality Declaration:** Suggested need for explicit orthogonality declarations to support lazy resolution.
+
+### Notes
+
+-   This version focuses on integrating community feedback and issue identification from the working copy rather than normative specification changes.
+-   Issues summarized from the working copy will inform future specification development and clarifications.
+
 ## [2.0.0] - 2023-10-27
 
 This is the first major revision of the specification based on a detailed technical review. The goal of this release is to add clarity, address ambiguities, and provide a more robust foundation for implementers.

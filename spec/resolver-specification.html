@@ -97,10 +97,17 @@
           <li><strong>Simplify Token Management</strong>: By externalizing resolution logic, token files remain simple and focused on defining values.</li>
           <li><strong>Enhance Modularity</strong>: Tokens can be organized into sets and modifiers, allowing teams to work on isolated components or themes without affecting others.</li>
           <li><strong>Improve Performance</strong>: By reducing the scope of tokens in resolution, the process becomes faster and more efficient.</li>
+          <p class="issue">
+            The term "process" needs clarification - what specific process is being referred to? Is this the "resolution process of the resolver"? More explanation is needed to understand exactly what becomes faster and more efficient when token scope is reduced during resolution.
+          </p>
           <li><strong>Facilitate Tool Integration</strong>: Providing a standard way to define resolution logic makes it easier for tools to integrate and automate token management.</li>
         </ul>
+              </section>
       </section>
-    </section>
+
+    <p class="issue">
+      A side effect of using a resolver should be the ability to have a clear dependency graph of how a resolution request would occur purely based on the inputs. This would enable better understanding of modifier interactions and support more efficient resolution strategies.
+    </p>
 
     <section>
       <h2>Resolver Terminology</h2>
@@ -109,6 +116,24 @@
         <dd>A mechanism that combines token sets and applies modifiers to produce a final, resolved set of design tokens.</dd>
         <dt>Token Set</dt>
         <dd>A collection of design tokens grouped together, often representing foundational tokens, component-specific tokens, or theme-specific tokens.</dd>
+        <dt> Dimension</dt>
+        <dd>Dimensions are categories used to organize your design tokens. See them as contexts in which token values might change:</dd>
+        <ul>
+          <li>Brands</li>
+          <li>Surface</li>
+          <li>Language direction</li>
+          <li>Themes</li>
+          <li>Platform</li>
+          <li>Screen size</li>
+          <li>Density</li>
+          <li>Component</li>
+          <li>State</li>
+          <li>Variant</li>
+          <li>Contrast</li>
+        </ul>
+        <p class="issue">
+          The term "Dimension" is potentially confusing since "Dimension" is also a type of token and a general concept. Consider using "Context" instead, which aligns with the existing definition as "contexts in which token values might change." Additionally, explicit mention of color schemes may be problematic - developers often distinguish between "themes" and "color modes" (like Windows High Contrast mode for accessibility), and it's unclear whether everyone would understand themes to encompass dark/light/high-contrast modes.
+        </p>
         <dt>Modifier</dt>
         <dd>
           An entity that modifies or overrides tokens in the base sets. Modifiers can represent dimensions like themes, modes, brands, or any other contextual variations.
@@ -120,11 +145,17 @@
             <dt>Alias</dt>
             <dd>An optional property that allows for namespacing or renaming token paths during resolution.</dd>
           </dl>
+          <p class="issue">
+            The modifier types and their behaviors aren't clear from these definitions alone. Real-world examples showing how Enumerated Modifiers, Include Modifiers, and Alias properties work in practice would help clarify their purpose and usage.
+          </p>
         </dd>
         <dt>Input</dt>
         <dd>Parameters provided to the resolver to specify which modifiers to apply during the resolution process.</dd>
         <dt>Resolution</dt>
         <dd>The process of combining token sets and applying modifiers based on the specified inputs to produce the final set of tokens.</dd>
+        <p class="issue">
+          The specification should address different real-world resolution use cases and their performance implications: <strong>full upfront resolution</strong> (resolving all possible combinations ahead of time), <strong>lazy resolution</strong> (resolving on-demand), and <strong>partial resolution</strong> for complex components. Without being upfront about token combinations and scopes, systems face combinatorial explosion problems that make resolution inefficient. There may be significant performance aspects to consider, especially for JIT (Just-In-Time) resolution scenarios. Input from tool makers like Figma and other design platforms would be valuable to understand real-world performance requirements and constraints.
+        </p>
         <dt>Orthogonality</dt>
         <dd>The property of modifiers being independent of each other, allowing them to be combined freely without affecting each other's resolution logic.</dd>
       </dl>
@@ -167,6 +198,9 @@
   ]
 }
         </pre>
+        <p class="issue">
+          It is recommended to use <code>.tokens.json</code> as the file extension for token files to align with the Design Tokens Format Specification naming conventions. This helps reinforce that these files should contain valid DTCG token structures rather than arbitrary JSON data.
+        </p>
       </section>
 
       <section>
@@ -179,6 +213,9 @@
           <li><strong>values</strong> (required): An array of possible values for the modifier.</li>
           <li><strong>meta</strong> (optional): Additional metadata, such as default values or aliases.</li>
         </ul>
+        <p class="issue">
+          Default values and aliasing should be moved out of the generic <code>meta</code> property into specific typed properties. The <code>meta</code> property should be reserved for implementation-specific extensions rather than functionality that directly contributes to resolution behavior.
+        </p>
         <p>Example of an "enumerated" modifier:</p>
         <pre class="example json" title="Enumerated Modifier Example">
 {
@@ -204,6 +241,13 @@
   ]
 }
         </pre>
+        <p class="issue">
+          There are structural problems with using arrays for modifiers and their values. Since <code>name</code> is required and must be unique for proper resolution, arrays allow for multiple conflicting values which should be impossible. For example, if a user passes <code>{ theme: "dark" }</code> and there are 2 modifiers named "theme" and 2 modifier values named "dark", this creates ambiguity that should be an error rather than defaulting to "take the first one." While arrays make sense for defining order of application, if we want key-value mapping for applying modifiers, flat objects should be required to ensure unique IDs by design.
+        </p>
+        <p class="issue">
+          The specification needs to clarify what constitutes valid values in the <code>values</code> array for modifiers. Key questions include: Are only relative pathnames allowed? Can referenced files have sets/modifiers of their own (enabling resolver chaining)? Should there be support for referencing sets by name (e.g., "foundation") rather than repeating file paths? The concept of chaining resolvers could use different type values to identify other resolvers. Additionally, values could support local references starting with "#" or string references to set names, making it easier to reference entire sets without listing all token file paths.
+        </p>
+        
         <p>Example of an "include" modifier. This type of modifier is used to conditionally include a set of tokens. The `values` array for an include modifier contains objects with a `name` and a corresponding list of `values` (file paths or inline tokens) that will be included if that name is present in the input.</p>
         <pre class="example json" title="Include Modifier Example">
 {
@@ -225,13 +269,165 @@
     </section>
 
     <section>
+      <h2>Resolution Aliasing</h2>
+      <p>Aliasing allows for dynamic namespacing or renaming of token paths during resolution. This is particularly useful when integrating external token sets or avoiding naming conflicts.</p>
+      <div class="issue">
+        <p><strong>Namespace vs Alias Terminology:</strong> Should the <code>alias</code> property be renamed to <code>namespace</code> to avoid confusion with token aliases (references to other tokens)?</p>
+        <p><strong>Redundancy with Modifier Names:</strong> The <code>meta.alias</code> property may be redundant since modifiers already have a <code>name</code> property that could serve the same namespacing purpose.</p>
+        <p><strong>Auto-namespacing Concerns:</strong> The automatic application of namespacing for modifiers introduces significant complexity and potential issues:</p>
+        <ul>
+          <li>Requires pre-resolution conflict checking across all sets and modifiers</li>
+          <li>Modifier JSON must be complete sets to avoid undefined token references</li>
+          <li>Risk of infinite loops if modifiers reference tokens in other modifier namespaces</li>
+          <li>Backwards compatibility issues requiring extensive token renames in existing design systems</li>
+        </ul>
+        <p><strong>Alternative Approach:</strong> Consider removing auto-namespacing for modifiers and using shared merging logic between sets and modifiers for better compatibility and simplicity.</p>
+      </div>
+      <p><strong>Example:</strong></p>
+      <p>Given a token set size.json:</p>
+      <pre class="example json" title="size.json">
+{
+  "sm": {
+    "value": "1px",
+    "type": "dimension"
+  },
+  "lg": {
+    "value": "10px",
+    "type": "dimension"
+  }
+}
+      </pre>
+      <p>By applying an alias in the modifier's meta.alias, we can namespace these tokens:</p>
+      <pre class="example json" title="Aliased Modifier">
+{
+  "modifiers": [
+    {
+      "name": "size",
+      "type": "include",
+      "values": [
+        {
+          "name": "default",
+          "values": ["size.json"]
+        }
+      ],
+      "meta": {
+        "alias": "spacing"
+      }
+    }
+  ]
+}
+      </pre>
+             <p>Resulting in tokens accessible via spacing.sm and spacing.lg.</p>
+             <p class="issue">
+               If the <code>meta.alias</code> behavior described above is normative/required behavior, it should not be part of the generic <code>meta</code> property but should be defined as part of the formal schema. Alternatively, if this is just an example of tooling-specific behavior, it should be clearly called out as such and not presented as part of the core specification.
+             </p>
+       
+       <section>
+         <h3>JSON Schema</h3>
+         <p>Source: <a href="https://resolver-spec.netlify.app/reference/schema/">https://resolver-spec.netlify.app/reference/schema/</a></p>
+         <pre class="example json" title="Resolver JSON Schema">
+{
+  "$id": "https://schemas.tokens.studio/prototype/resolver.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Resolver Specification",
+  "$defs": {
+    "tokenSet": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["values"]
+    },
+    "modifier": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["name", "values"]
+          }
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": ["name", "values"]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "sets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tokenSet"
+      }
+    },
+    "modifiers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/modifier"
+      }
+    }
+  },
+  "required": ["sets", "modifiers"]
+}
+         </pre>
+       </section>
+    </section>
+
+    <section>
       <h2>Resolution Logic</h2>
       <p>The resolution process involves the following steps:</p>
       <ol>
         <li><strong>Input Validation</strong>: Ensure the provided inputs match the expected modifiers and their acceptable values.</li>
+        <p class="issue">
+          The term "inputs" is used throughout the specification but never formally defined. Inputs appear to represent the permutation or combination of modifiers being selected for resolution - essentially the question "What would my output look like given some combination of modifiers being enabled or chosen?" This fundamental concept should be clearly defined, potentially as "data" or with a more specific term that clarifies its role in the resolution process.
+        </p>
         <li><strong>Base Set Flattening</strong>: Load and merge the token sets specified in the <strong>sets</strong> array. Later sets override earlier ones if there are naming conflicts.</li>
+        <p class="issue">
+          The merging process needs detailed specification to handle DTCG token data correctly. Simply performing a deep merge on raw JSON could yield different results than fully interpreting the DTCG data first and then merging. This is particularly important for inheritable format properties like <code>$type</code>. For example, when loading two JSON files with a top-level "color" key where one has <code>$type: "color"</code> and another has <code>$type: "gradient"</code>, these represent incompatible schemas that cannot be merged. The specification must outline what constitutes "mergeable" vs "unmergeable" token sets and provide clear rules for handling such conflicts.
+        </p>
+        <p class="issue">
+          The specification needs clear step-by-step instructions for how deep merging should occur, including detailed guidance on handling edge cases or when to error appropriately. This should include specific algorithms and decision trees for implementers to follow consistently.
+        </p>
         <li><strong>Modifier Application</strong>: Apply the selected modifiers based on the inputs. Modifiers can override tokens from the base sets or introduce new tokens.</li>
+        <p class="issue">
+          The specification should clarify the resolution order when multiple modifiers are applied simultaneously. For instance, if both "theme" and "brand" modifiers are used and both attempt to override the same token, which modifier should take precedence? Clear precedence rules are needed to ensure consistent and predictable resolution behavior across implementations.
+        </p>
         <li><strong>Aliasing and Namespacing</strong>: Apply any aliasing specified in the modifiers to namespace or rename tokens.</li>
+        <p class="issue">
+          The specification needs to clarify the different types of "aliasing" and their behavior during resolution. There are two distinct concepts being referred to as "aliasing": (1) <strong>Namespacing aliasing</strong> - where tokens are renamed/namespaced (e.g., "red.500" becomes "colors.red.500"), and (2) <strong>Token reference aliasing</strong> - where one token's value references another token's value. The specification should clearly distinguish between these concepts and address how namespacing aliases behave when tokens are overridden by later sets - specifically, if an alias points to a token that gets overridden, does the alias resolve to the new/overridden value?
+        </p>
         <li><strong>Alias Resolution</strong>: Resolve any token references (aliases) using the combined tokens from the base sets and modifiers.</li>
         <li><strong>Conflict Resolution</strong>: In case of conflicting tokens (same name and path), later modifiers or sets override earlier ones.</li>
         <li><strong>Circular Reference Detection</strong>: Detect and handle circular references as errors.</li>
@@ -338,6 +534,9 @@
   ]
 }
         </pre>
+        <p class="issue">
+          The <code>alias</code> property should be renamed to <code>namespace</code> to make its purpose clearer. Additionally, it should be moved out of the generic <code>meta</code> property and included in the formal schema definition. Currently, any arbitrary value could exist associated with <code>alias</code> since it's within the unstructured <code>meta</code> object. Anything that is not 100% discardable should not live in <code>meta</code>.
+        </p>
       </section>
       <section>
         <h3>Input</h3>
@@ -523,6 +722,9 @@
         <li>A "theme" modifier that includes a "dimmed" option only available in "dark" mode.</li>
       </ul>
       <p>In such cases, the resolver must handle dependencies between modifiers, potentially by validating acceptable combinations or structuring modifiers to reflect the dependencies.</p>
+      <p class="issue">
+        This requires input from the resolver author to explicitly declare whether a modifier is purely orthogonal or not. This declaration should be upfront in the specification, otherwise lazy resolution cannot be supported without the resolver having to check the actual tokens in scope.
+      </p>
     </section>
 
     <section class="informative">
@@ -611,10 +813,17 @@
         </pre>
         <p>Resulting in tokens accessible via spacing.sm and spacing.lg.</p>
       </section>
+      
       <section>
         <h3>Real-World Use Case: GitHub Primer</h3>
         <p>The GitHub Primer design system uses multiple dimensions, including themes and visual modes (e.g., colorblind modes). The Resolver Specification can represent these dimensions as modifiers, allowing for efficient resolution and management of tokens.</p>
       </section>
+      <p class="note">
+        Question: Would it be worth to highlight some public design systems and how they would use the resolver spec for more relatable use cases?
+      </p>
+      <p class="issue">
+        While public design system examples could be valuable, generic use cases showing common dimensional patterns might be more important as foundational examples: single dimension (1 brand), two dimensions (1 brand + 2 themes), three dimensions (2 brands + 2 themes each), etc. These generic patterns would be the "meat and potatoes" compared to specific design system examples being the "cherry on the cake."
+      </p>
       <section>
         <h3>Orthogonality Considerations</h3>
         <p>In scenarios where modifiers are not orthogonal, the resolver may need to enforce acceptable combinations and handle dependencies between modifiers. This can be achieved by:</p>
@@ -627,7 +836,11 @@
     </section>
     <section class="appendix informative">
       <h2>Example 1: Brand Theming</h2>
+      
       <p>Scenario: A company has multiple brands—Brand A and Brand B. Each brand has its own color palette and typography. Components like buttons and headers need to adapt based on the selected brand.</p>
+      <p class="issue">
+        These examples could be moved to the Resolver Spec netlify app for better presentation. If it uses Astro, interactive code tabs could be added to make the examples more engaging and easier to understand through hands-on exploration.
+      </p>
       <section>
         <h3>Resolver Definition</h3>
         <pre class="example json" title="Brand Theming Resolver">
